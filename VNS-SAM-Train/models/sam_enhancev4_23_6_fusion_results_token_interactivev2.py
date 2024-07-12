@@ -1,8 +1,13 @@
+"""v2
+去掉之前用的MLP层，减少参数。
 """
-token 交互使用一个交叉注意力层。
+
+"""
+token 交互使用一个交叉注意力层。 
 2024/07/12
 --guoguangqian
 """
+
 
 import os
 import argparse
@@ -57,6 +62,8 @@ class LayerNorm2d(nn.Module):
         x = self.weight[:, None, None] * x + self.bias[:, None, None]
         return x
 
+
+
 class MLP(nn.Module):
     def __init__(
         self,
@@ -80,6 +87,8 @@ class MLP(nn.Module):
         if self.sigmoid_output:
             x = F.sigmoid(x)
         return x
+
+
 
 class Attention(nn.Module):
     """
@@ -308,6 +317,7 @@ class SAMAggregatorNeck(nn.Module):
         return img_feat, edge_feat
 
 
+
 # class Token_Attn(nn.Module):
 #     def __init__(self, dim):
 #         super().__init__()
@@ -333,6 +343,9 @@ class TokenInter(nn.Module):
         self.token_attn1 = Attention(dim, 8, 4)
         self.token_attn2 = Attention(dim, 8, 4) 
 
+        self.mask_out_layer = nn.Linear(dim, dim // 8)
+        self.edge_out_layer = nn.Linear(dim, dim // 8)
+
 
     def forward(self, mask_token, edge_token):
         fusion_token = torch.cat([mask_token, edge_token], dim=1)
@@ -341,15 +354,18 @@ class TokenInter(nn.Module):
         # mask toekn
         # 1 1 256
         mask_token_o = self.token_attn1(fusion_token.unsqueeze(0), mask_token.unsqueeze(0), mask_token.unsqueeze(0))
+        mask_token_o = self.mask_out_layer(mask_token_o)
 
         # edge token
         # 1 1 256
         edge_token_o = self.token_attn2(fusion_token.unsqueeze(0), edge_token.unsqueeze(0), edge_token.unsqueeze(0))
+        edge_token_o = self.edge_out_layer(edge_token_o)
+
 
         return mask_token_o.squeeze(0), edge_token_o.squeeze(0)        
 
 
-class MaskDecoderEnhancefusionTI(MaskDecoder):
+class MaskDecoderEnhancefusionTIv2(MaskDecoder):
     def __init__(self, model_type):
         super().__init__(transformer_dim=256,
                         transformer=TwoWayTransformer(
@@ -386,9 +402,9 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
 
         self.hf_token = nn.Embedding(2, transformer_dim)  # 一个mask token， 一个edge token
         
-        self.hf_mlp = (MLP(transformer_dim, transformer_dim, transformer_dim // 8, 3))
+        # self.hf_mlp = (MLP(transformer_dim, transformer_dim, transformer_dim // 8, 3))
         
-        self.edge_mlp = (MLP(transformer_dim, transformer_dim, transformer_dim // 8, 3))
+        # self.edge_mlp = (MLP(transformer_dim, transformer_dim, transformer_dim // 8, 3))
 
         self.num_mask_tokens = self.num_mask_tokens + 2   #NOTE:  之前都设置错了，都是 +1，导致mask token好像根本没有学到。--2023.12.11
         
@@ -602,15 +618,10 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
             # else:
             #     hyper_in_list.append(self.edge_mlp(mask_tokens_out[:, i, :]))
         mask_hq_token, edge_token = self.ti_layer(mask_tokens_out[:, -2, :], mask_tokens_out[:, -1, :])
-        edge_token = self.edge_mlp(edge_token)
-        mask_hq_token = self.hf_mlp(mask_hq_token)  # b 32
-
 
         inter_mask_hq_token, inter_edge_token = self.ti_layer(inter_mask_tokens_out[:, -2, :], inter_mask_tokens_out[:, -1, :])
-        inter_edge_token = self.edge_mlp(inter_edge_token)
-        inter_mask_hq_token = self.hf_mlp(inter_mask_hq_token)
-        
 
+        
         hyper_in = torch.stack(hyper_in_list, dim=1)
         b, c, h, w = upscaled_embedding_sam.shape
 
@@ -623,10 +634,13 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
         inter_masks_ours = (inter_mask_hq_token @ upscaled_inter_embedding_ours.view(b, c, h * w)).view(b, -1, h, w)
         inter_edge = (inter_edge_token @ upscaled_inter_edge_embedding.view(b, c, h * w)).view(b, -1, h, w)
 
+
         masks = torch.cat([masks_sam, masks_ours, edge_pred],dim=1)
         inter_masks  = torch.cat([inter_masks_ours, inter_edge], dim=1)
 
+
         iou_pred = self.iou_prediction_head(iou_token_out)
+
 
         # results fusion   
         dense_ = F.interpolate(dense_, size = masks_ours.shape[2:], mode='bilinear', align_corners=False)
@@ -634,5 +648,4 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
         fusion_mask = self.fusion_layer(fusion_mask)
         
 
-        
         return masks, inter_masks, dense_, fusion_mask, iou_pred, edge_pred, attn_map

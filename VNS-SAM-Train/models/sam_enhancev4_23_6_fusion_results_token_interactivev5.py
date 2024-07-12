@@ -1,3 +1,8 @@
+"""v5
+TokenInter attention downsample rate 2
+
+"""
+
 """
 token 交互使用一个交叉注意力层。
 2024/07/12
@@ -308,6 +313,7 @@ class SAMAggregatorNeck(nn.Module):
         return img_feat, edge_feat
 
 
+
 # class Token_Attn(nn.Module):
 #     def __init__(self, dim):
 #         super().__init__()
@@ -330,8 +336,8 @@ class TokenInter(nn.Module):
     def __init__(self, dim) -> None:
         super().__init__()
         self.f1 = nn.Linear(dim * 2, dim)
-        self.token_attn1 = Attention(dim, 8, 4)
-        self.token_attn2 = Attention(dim, 8, 4) 
+        self.token_attn1 = Attention(dim, 8, 2)
+        self.token_attn2 = Attention(dim, 8, 2) 
 
 
     def forward(self, mask_token, edge_token):
@@ -349,7 +355,7 @@ class TokenInter(nn.Module):
         return mask_token_o.squeeze(0), edge_token_o.squeeze(0)        
 
 
-class MaskDecoderEnhancefusionTI(MaskDecoder):
+class MaskDecoderEnhancefusionTIv5(MaskDecoder):
     def __init__(self, model_type):
         super().__init__(transformer_dim=256,
                         transformer=TwoWayTransformer(

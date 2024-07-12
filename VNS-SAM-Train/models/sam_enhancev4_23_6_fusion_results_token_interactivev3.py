@@ -1,3 +1,8 @@
+"""v3
+只用edge token 融合 mask token, edge boosted mask
+"""
+
+
 """
 token 交互使用一个交叉注意力层。
 2024/07/12
@@ -331,7 +336,7 @@ class TokenInter(nn.Module):
         super().__init__()
         self.f1 = nn.Linear(dim * 2, dim)
         self.token_attn1 = Attention(dim, 8, 4)
-        self.token_attn2 = Attention(dim, 8, 4) 
+        # self.token_attn2 = Attention(dim, 8, 4) 
 
 
     def forward(self, mask_token, edge_token):
@@ -342,14 +347,9 @@ class TokenInter(nn.Module):
         # 1 1 256
         mask_token_o = self.token_attn1(fusion_token.unsqueeze(0), mask_token.unsqueeze(0), mask_token.unsqueeze(0))
 
-        # edge token
-        # 1 1 256
-        edge_token_o = self.token_attn2(fusion_token.unsqueeze(0), edge_token.unsqueeze(0), edge_token.unsqueeze(0))
+        return mask_token_o.squeeze(0)
 
-        return mask_token_o.squeeze(0), edge_token_o.squeeze(0)        
-
-
-class MaskDecoderEnhancefusionTI(MaskDecoder):
+class MaskDecoderEnhancefusionTIv3(MaskDecoder):
     def __init__(self, model_type):
         super().__init__(transformer_dim=256,
                         transformer=TwoWayTransformer(
@@ -601,13 +601,12 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
             #     hyper_in_list.append(self.hf_mlp(mask_tokens_out[:, i, :] + mask_tokens_out[:, i+1, :]))
             # else:
             #     hyper_in_list.append(self.edge_mlp(mask_tokens_out[:, i, :]))
-        mask_hq_token, edge_token = self.ti_layer(mask_tokens_out[:, -2, :], mask_tokens_out[:, -1, :])
-        edge_token = self.edge_mlp(edge_token)
+        mask_hq_token = self.ti_layer(mask_tokens_out[:, -2, :], mask_tokens_out[:, -1, :])
+        edge_token = self.edge_mlp(mask_tokens_out[:, -1, :])
         mask_hq_token = self.hf_mlp(mask_hq_token)  # b 32
 
-
-        inter_mask_hq_token, inter_edge_token = self.ti_layer(inter_mask_tokens_out[:, -2, :], inter_mask_tokens_out[:, -1, :])
-        inter_edge_token = self.edge_mlp(inter_edge_token)
+        inter_mask_hq_token = self.ti_layer(inter_mask_tokens_out[:, -2, :], inter_mask_tokens_out[:, -1, :])
+        inter_edge_token = self.edge_mlp(inter_mask_tokens_out[:, -1, :])
         inter_mask_hq_token = self.hf_mlp(inter_mask_hq_token)
         
 
@@ -632,7 +631,6 @@ class MaskDecoderEnhancefusionTI(MaskDecoder):
         dense_ = F.interpolate(dense_, size = masks_ours.shape[2:], mode='bilinear', align_corners=False)
         fusion_mask = torch.cat((masks_ours, dense_), dim=1)
         fusion_mask = self.fusion_layer(fusion_mask)
-        
 
-        
+
         return masks, inter_masks, dense_, fusion_mask, iou_pred, edge_pred, attn_map
