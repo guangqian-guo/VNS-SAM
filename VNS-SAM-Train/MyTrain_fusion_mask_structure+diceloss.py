@@ -504,7 +504,6 @@ def train(args, net, optimizer, train_dataloaders, valid_dataloaders, val_set_na
                 interm_embeddings=interm_embeddings,
             )
 
-
             # loss_mask1, loss_dice1 = loss_masks(masks_hq, labels/255.0, len(masks_hq))
             loss_mask1 = structure_loss(masks_hq, labels/255.0)
             loss_edge1 = dice_loss_edge(edge_pred, edges)   # TODO !!!
@@ -521,7 +520,7 @@ def train(args, net, optimizer, train_dataloaders, valid_dataloaders, val_set_na
             
             loss_fusion_mask = structure_loss(fusion_mask, labels/255.0, )
             
-            loss = 0.33 * (loss1 + loss2 + loss_dense) + loss_fusion_mask 
+            loss = (loss1 + loss2 + loss_dense) + loss_fusion_mask 
             
             # loss_dict = {"loss_mask": loss_mask, "loss_dice":loss_dice, "loss_edge": loss_edge}
             loss_dict = {"loss_mask1": loss_mask1, "loss_edge1": loss_edge1, 
@@ -619,7 +618,7 @@ def evaluate(args, net, sam, valid_dataloaders, val_set_name, save_preds=False, 
         for data_val in metric_logger.log_every(valid_dataloader, 100):
             imidx_val, inputs_val, labels_val, shapes_val, labels_ori, ori_gt_path = data_val['imidx'], data_val['image'], data_val['label'], data_val['shape'], data_val['ori_label'], data_val['ori_gt_path']
             img_name = ori_gt_path[0].split('/')[-1]
-            
+
             if torch.cuda.is_available():
                 inputs_val = inputs_val.cuda()
                 labels_val = labels_val.cuda()
@@ -627,8 +626,10 @@ def evaluate(args, net, sam, valid_dataloaders, val_set_name, save_preds=False, 
 
             imgs = inputs_val.permute(0, 2, 3, 1).cpu().numpy()
             
-
+            
             labels_box = misc.masks_to_boxes(labels_val[:,0,:,:])
+            
+            
             labels_points = misc.masks_sample_points(labels_val[:,0,:,:], k=1)
 
             # labels_pos_neg_points = misc.masks_sample_pos_neg_points(labels_val[:,0,:,:], k=6)
