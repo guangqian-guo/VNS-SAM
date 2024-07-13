@@ -14,6 +14,9 @@ from .sam_enhancev4_23_6_fusion_results_token_interactivev6 import MaskDecoderEn
 from .sam_enhancev4_23_6_fusion_resultsv2 import MaskDecoderEnhancefusionv2
 from .sam_enhancev4_23_6_fusion_resultsv3 import MaskDecoderEnhancefusionv3
 from .sam_enhancev4_23_6_fusion_resultsv4 import MaskDecoderEnhancefusionv4
+from .sam_enhancev4_23_6_fusion_resultsv5 import MaskDecoderEnhancefusionv5
+from .sam_enhancev4_23_6_fusion_resultsv6 import MaskDecoderEnhancefusionv6
+from .sam_enhancev4_23_6_fusion_resultsv7 import MaskDecoderEnhancefusionv7
 
 
 from .sam_enhance_dwd import MaskDecoderEnhanceDWD
@@ -36,6 +39,10 @@ model_registry = {
     "sam-en-fusionv2": MaskDecoderEnhancefusionv2,
     "sam-en-fusionv3": MaskDecoderEnhancefusionv3,
     "sam-en-fusionv4": MaskDecoderEnhancefusionv4,
+    "sam-en-fusionv5": MaskDecoderEnhancefusionv5,
+    "sam-en-fusionv6": MaskDecoderEnhancefusionv6,
+    "sam-en-fusionv7": MaskDecoderEnhancefusionv7,
+
     ##############################################
 
     "sam-en-dwd": MaskDecoderEnhanceDWD,
