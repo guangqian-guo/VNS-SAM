@@ -1,8 +1,10 @@
+"""v4
+通过一层 7x7 的卷积融合
+"""
+
 """
 结果融合，将预测的mask和dense mask 通过三层卷积融合
-
 """
-
 
 import os
 import argparse
@@ -382,12 +384,7 @@ class MaskDecoderEnhancefusion(MaskDecoder):
             # nn.Sigmoid()        ######################### NOTE: there is no sigmid before --3.5
         )
         
-        self.fusion_layer = nn.Sequential(
-                nn.Conv2d(2, 256, 3, 1, 1), 
-                nn.GELU(),
-                nn.Conv2d(256, 256, 3, 1, 1),
-                nn.GELU(),
-                nn.Conv2d(256, 1, 3, 1, 1))
+        self.fusion_layer =  nn.Conv2d(2, 1, 7, 1, 3)
 
     
     def forward(
