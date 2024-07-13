@@ -309,7 +309,7 @@ class SAMAggregatorNeck(nn.Module):
         return img_feat, edge_feat
 
 
-class MaskDecoderEnhancefusion(MaskDecoder):
+class MaskDecoderEnhancefusionv4(MaskDecoder):
     def __init__(self, model_type):
         super().__init__(transformer_dim=256,
                         transformer=TwoWayTransformer(
