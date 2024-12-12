@@ -521,10 +521,8 @@ class MaskDecoderEnhancefusionv7(MaskDecoder):
         mask_tokens_out = hs[:, 1 : self.num_mask_tokens, :]   #NOTE： 这里也设置的不对，应该就是self.num_mask_tokens，之前是2+self.num_mask_tokens  2023.12.11
         
         # dense pred
-        hq_token = (mask_tokens_out[:, -2, :] + mask_tokens_out[:, -1, :]).unsqueeze(1)        
-        feat = src
+        feat = src.transpose(1, 2).view(b, c, h, w)
         dense_pred = self.dense_pred_head(feat)
-        dense_pred = dense_pred.transpose(1, 2).view(b, 1, h, w)
         dense_ = torch.cat([dense_pred], dim=1)
         
         
