@@ -15,7 +15,6 @@ dataset_polyp = {"name": "polyp-train",
                 "im_ext": ".png",
                 "gt_ext": ".png"}
 
-
 # low light  
 dataset_dis_low = {"name": "DIS5K-TR",
                 "im_dir": "./data/DIS5K/DIS-TR-1536/lowlight_im",
@@ -38,8 +37,6 @@ dsataset_thin_low = {"name": "ThinObject5k-TR-low",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
 
-
-
 # valid set
 # low light 
 dataset_dislow_val = {"name": "DIS5K-VD-low",
@@ -47,7 +44,6 @@ dataset_dislow_val = {"name": "DIS5K-VD-low",
                 "gt_dir": "./data/DIS5K/DIS-VD-1536/gt",
                 "im_ext": ".png",
                 "gt_ext": ".png"}
-
 
 dataset_thinlow_val = {"name": "ThinObject5k-TE-low",
                 "im_dir": "./data/thin_object_detection/ThinObject5K_low/images_test",
@@ -62,13 +58,11 @@ dataset_camo_val = {"name": "CAMO",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
 
-
 dataset_cha_val = {"name": "CHAMELEON",
                 "im_dir": "./data/COD/TestDataset/CHAMELEON/Imgs",
                 "gt_dir": "./data/COD/TestDataset/CHAMELEON/GT",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
-
 
 dataset_cod10k_val= {"name": "COD10K",
                 "im_dir": "./data/COD/TestDataset/COD10K/Imgs",
@@ -76,13 +70,11 @@ dataset_cod10k_val= {"name": "COD10K",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
 
-
 dataset_NC4K_val = {"name": "NC4K",
                 "im_dir": "./data/COD/TestDataset/NC4K/Imgs",
                 "gt_dir": "./data/COD/TestDataset/NC4K/GT",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
-
 
 # poly seg
 dataset_colondb_val = {"name": "CVC-ColonDB",
@@ -118,13 +110,11 @@ datasset_cds2k = {"name": "cds2k",
                 "im_ext": ".jpg",
                 "gt_ext": ".png"}
 
-
 def build_nosl():
     train_datasets=[dataset_cod, dataset_polyp,  dataset_dis_low, dsataset_thin_low, dataset_fss_low]
     valid_datasets = [dataset_camo_val, dataset_cod10k_val, dataset_kvasir_val, dataset_clinicdb_val, dataset_dislow_val,  dataset_thinlow_val, dataset_NC4K_val, dataset_colondb_val, dataset_etis_val, datasset_cds2k, dataset_coco_val]
     
     return train_datasets, valid_datasets
-
 
 dataset_registry = {
     "ns": build_nosl
