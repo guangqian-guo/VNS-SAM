@@ -16,9 +16,6 @@
 <sup>3</sup> Max Planck Institute for Informatics <sup>4</sup> University of Science and Technology of China <br>
     </div>
 
-<div align="center">
-    <h3>IEEE Transactions on Image Processing (TIP)</h3>
-</div>
 
 ![Multi-Modal](https://img.shields.io/badge/Task-Segmentation-red) <a href='https://guangqian-guo.github.io/VNS-SAM/'><img src='https://img.shields.io/badge/Project-Page-Green'></a> <a href='https://ieeexplore.ieee.org/document/10810787'><img src='https://img.shields.io/badge/Paper-IEEE_Xplore-blue'></a> <a href='https://guangqian-guo.github.io/VNS-SAM/'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Data-green'></a>
 
@@ -105,16 +102,14 @@ Evaluation Set:
 ---
 ## 📈Train
 ```bash
-
+torchrun --nproc_per_node=4 --master_port=10113  MyTrain.py   --checkpoint sam_vit_l_0b3195.pth  --model-type vit_l  --output [output_dir] --dataset  ns 
 ```
-Our model is ained on 4x 4090 GPUs.
+Our model is trained on 4x 4090 GPUs.
 
 ## 📈Evaluation
-
 ```bash
-
+torchrun --nproc_per_node=4 --master_port=10113  MyTrain.py   --checkpoint sam_vit_l_0b3195.pth  --model-type vit_l  --output [output_dir] --dataset  ns  --eval  --restore-model [trained_model_path]  --model vns-sam  --prompt box
 ```
-
 
 ## Citation
 
