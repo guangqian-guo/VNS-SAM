@@ -924,12 +924,10 @@ def evaluate(args, net, sam, valid_dataloaders, val_set_name, save_preds=False, 
     # with open(os.path.join(args.output, 'scores.txt'), 'w') as f:
     #     for score in scores:
     #         f.write(f"Image: {score['image']}, VNS Score: {score['vns_score']:.4f}, IoU: {score['iou']:.4f}, BIoU: {score['biou']:.4f}\n")
-
     return test_stats
 
 
 if __name__ == "__main__":
-    
     args = get_args_parser()
     train_datasets, valid_datasets = dataset_registry[args.dataset]()
     os.makedirs(args.output, exist_ok=True)
