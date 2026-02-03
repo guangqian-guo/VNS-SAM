@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="fig1.png" width="300">
+    <img src="assets/fig1.png" width="300">
 </p>
 
 # [IEEE TIP] Boosting Segment Anything Model to Generalize Visually Non-Salient Scenarios
