@@ -1,9 +1,3 @@
-# Copyright by HQ-SAM team
-# All rights reserved.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-# CUDA_VISIBLE_DEVICES=1 PORT=101 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29501  train_cod_wo_lowlevel_fusion.py  --checkpoint  ./pretrained_checkpoint/sam_vit_l_0b3195.pth  --model-type vit_l  --output work_dirs/hq_sam_l_wo_lowlevelfusion/ --batch_size_train 1
 from optparse import check_builtin
 import os
 import argparse
@@ -104,21 +98,6 @@ def evaluate_metrics(args):
     return results_list
 
 
-# def generate_benchmark_table(results):
-#     latex = []
-#     for k in range(len(results)):
-#         result = results[k]
-#         # print(line.split('Model:')[1].split(') Smeasure')[0], model_lst[i])
-#         S_measure = '%.3f'%result['Smeasure']
-#         w_F = '%.3f'%result['wFmeasure']
-#         mean_E_m = '%.3f'%result['meanEm']
-#         MAE = round(result['MAE'],3)
-        
-#         res_latex = '& {}   & {}   & {}   & {} '.format(S_measure, mean_E_m, w_F, MAE)
-#         latex.append(res_latex)
-#         print(res_latex, end='\n')
-#     return latex
-
 def generate_benchmark_table(results):
     latex = []
     for k in range(len(results)):
@@ -134,7 +113,6 @@ def generate_benchmark_table(results):
     
     return latex
        
-
 
 def show_anns(masks, input_point, input_box, input_label, filename, image, ious, boundary_ious):
     if len(masks) == 0:
@@ -203,10 +181,7 @@ def heatmap(x_show, img, name=None):
         # x_show = img
     if name is not None:
         cv2.imwrite( name, x_show)
-    
-    # cv2.imshow('img', x_show)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+
     
 def show_saliency_map(x_show, img, name=None):
     x_show = x_show.data.cpu().numpy().squeeze()
@@ -233,9 +208,7 @@ def show_saliency_map(x_show, img, name=None):
         # x_show = img
     if name is not None:
         cv2.imwrite( name, x_show)
-    # cv2.imshow('img', x_show)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+
 
 def visualize_attention_map_opencv(attention_weights, img, name=None):
     
