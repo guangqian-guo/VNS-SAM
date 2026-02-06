@@ -316,10 +316,10 @@ class VNS_SAM_Decoder(MaskDecoder):
                         iou_head_hidden_dim=256,)
         assert model_type in ["vit_b","vit_l","vit_h", "vit_t"]
         
-        checkpoint_dict = {"vit_b":"/home/ps/Guo/Project/sam-hq-main/train/pretrained_checkpoint/sam_vit_b_maskdecoder.pth",
-                           "vit_l":"/home/ps/Guo/Project/VNS-SAM-old-version/train/pretrained_checkpoint/sam_vit_l_maskdecoder.pth",
-                           'vit_h':"/home/ps/Guo/Project/sam-hq-main/train/pretrained_checkpoint/sam_vit_h_maskdecoder.pth",
-                           'vit_t': "/home/ps/Guo/Project/sam-hq-main/train/pretrained_checkpoint/mobile_sam_maskdecoder.pth"}
+        checkpoint_dict = {"vit_b":"",
+                           "vit_l":"/mnt/nvme3n1/guo/VNS-SAM-old-version/train/pretrained_checkpoint/sam_vit_l_maskdecoder.pth",
+                           'vit_h':"",
+                           'vit_t': ""}
         checkpoint_path = checkpoint_dict[model_type]
         
         self.load_state_dict(torch.load(checkpoint_path), strict=False)

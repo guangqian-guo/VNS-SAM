@@ -79,17 +79,17 @@ cd VNS-SAM
 conda create -n vnssam python=3.9
 conda activate vnssam
 pip install -r requirements.txt
+cd VNS-Train
 ```
 
 3. Download Pre-trained Models
 ```bash
-SAM: Download sam_vit_h_4b8939.pth from Segment Anything.
-
-VNS-SAM Checkpoint: Download from [Releases].
+SAM: Download sam_vit_l_0b3195.pth from Segment Anything.
+VNS-SAM Checkpoint: Download from (https://huggingface.co/guogq/VNS-SAM)
 ```
 ---
 ## <a name="dataset"></a>💡 VNS-SEG Dataset
-We established VNS-SEG, a unified dataset for visually non-salient segmentation, containing over 35K image-mask pairs. It aggregates existing datasets and synthesizes low-light data to cover diverse VNS scenarios.
+We established VNS-SEG, a unified dataset for visually non-salient segmentation, containing over 35K image-mask pairs. It aggregates existing datasets and synthesizes low-light data to cover diverse VNS scenarios. You can download the dataset from [VNS-Seg](https://huggingface.co/guogq/VNS-SAM)
 
 Training Set (23,232 images):
 - Camouflage: COD10K, CAMO.
@@ -102,7 +102,7 @@ Evaluation Set:
 ---
 ## 📈Train
 ```bash
-torchrun --nproc_per_node=4 --master_port=10113  MyTrain.py   --checkpoint sam_vit_l_0b3195.pth  --model-type vit_l  --output [output_dir] --dataset  ns 
+torchrun --nproc_per_node=4 --master_port=10113  MyTrain.py   --checkpoint sam_vit_l_0b3195.pth  --model-type vit_l  --output [output_dir] --dataset  ns  --model vns-sam
 ```
 Our model is trained on 4x 4090 GPUs.
 

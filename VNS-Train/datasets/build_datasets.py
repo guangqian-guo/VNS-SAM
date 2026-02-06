@@ -97,11 +97,7 @@ dataset_etis_val = {"name": "ETIS",
                 "gt_dir": "./data/PolySeg/TestDataset/ETIS/masks",
                 "im_ext": ".png",
                 "gt_ext": ".png"}
-dataset_coco_val = {"name": "coco-val",
-                    "im_dir": "/mnt/nvme1n1/Guo/dataset/RobustSeg/test/COCO/images",
-                    "gt_dir": "/mnt/nvme1n1/Guo/dataset/RobustSeg/test/COCO/masks",
-                    "im_ext": ".jpg",
-                    "gt_ext": ".png"}
+
 
 # defect detection
 datasset_cds2k = {"name": "cds2k",
@@ -112,7 +108,7 @@ datasset_cds2k = {"name": "cds2k",
 
 def build_nosl():
     train_datasets=[dataset_cod, dataset_polyp,  dataset_dis_low, dsataset_thin_low, dataset_fss_low]
-    valid_datasets = [dataset_camo_val, dataset_cod10k_val, dataset_kvasir_val, dataset_clinicdb_val, dataset_dislow_val,  dataset_thinlow_val, dataset_NC4K_val, dataset_colondb_val, dataset_etis_val, datasset_cds2k, dataset_coco_val]
+    valid_datasets = [dataset_camo_val, dataset_cod10k_val, dataset_kvasir_val, dataset_clinicdb_val, dataset_dislow_val,  dataset_thinlow_val, dataset_NC4K_val, dataset_colondb_val, dataset_etis_val, datasset_cds2k]
     
     return train_datasets, valid_datasets
 
